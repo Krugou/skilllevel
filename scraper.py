@@ -34,6 +34,26 @@ def get_package_data(content_str):
     except Exception:
         return set()
 
+import subprocess
+
+def has_commits(repo_dir):
+    """Check if the repository has at least one commit on main or master."""
+    try:
+        # First verify it's a git repo
+        if not os.path.isdir(os.path.join(repo_dir, '.git')):
+            return False
+            
+        # Check for commits
+        result = subprocess.run(
+            ['git', 'rev-parse', 'HEAD'],
+            cwd=repo_dir,
+            capture_output=True,
+            text=True
+        )
+        return result.returncode == 0
+    except Exception:
+        return False
+
 def scrape_local_packages(package_counts):
     repos_path = get_repos_path()
     print(f"Scanning local directories in: {repos_path}")
@@ -41,6 +61,10 @@ def scrape_local_packages(package_counts):
     for repo_name in os.listdir(repos_path):
         repo_dir = os.path.join(repos_path, repo_name)
         if not os.path.isdir(repo_dir):
+            continue
+
+        if not has_commits(repo_dir):
+            print(f"  Skipping {repo_name} (no commits found)")
             continue
 
         repo_packages = set()
