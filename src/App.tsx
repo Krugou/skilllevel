@@ -1,4 +1,4 @@
-import { useState, useRef, useLayoutEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,7 +10,6 @@ import {
   type ChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import gsap from 'gsap';
 import { 
   ChevronUp, 
   ChevronDown, 
@@ -64,8 +63,6 @@ function App() {
   const [randomizedEntries, setRandomizedEntries] = useState<[string, number][]>([]);
   const [sectionOrder, setSectionOrder] = useState<SectionId[]>(['about', 'stats', 'chart', 'categories', 'grid']);
   
-  const containerRef = useRef<HTMLDivElement>(null);
-
   const allEntries = useMemo(() => {
     const entries = Object.entries(typedSkillData.packages);
     if (dataSort === 'asc') {
@@ -117,10 +114,6 @@ function App() {
     [newOrder[currentIndex], newOrder[newIndex]] = [newOrder[newIndex], newOrder[currentIndex]];
     setSectionOrder(newOrder);
   };
-
-  useLayoutEffect(() => {
-    // Animation removed to ensure visibility
-  }, [sectionOrder]);
 
   const data = {
     labels,
@@ -331,7 +324,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-bg text-frost selection:bg-primary/30 font-sans p-4 sm:p-8 lg:p-12" ref={containerRef}>
+    <div className="min-h-screen bg-bg text-frost selection:bg-primary/30 font-sans p-4 sm:p-8 lg:p-12">
       <div className="max-w-[1600px] mx-auto">
         <header className="mb-16 border-l-8 border-primary pl-8 py-4">
           <h1 className="text-6xl font-black tracking-tighter sm:text-8xl mb-2 flex items-baseline gap-4">
