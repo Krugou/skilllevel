@@ -1,0 +1,73 @@
+@import "tailwindcss";
+
+@theme {
+  /* Finnish Architectural Palette (Nordic Functionalism) */
+  --color-primary: #D4AF37; /* Burnished Copper/Brass Accents */
+  --color-secondary: #5E7D7E; /* Sage/Nordic Pine */
+  --color-tertiary: #A79F92; /* Warm Granite */
+  --color-bg: #1A1C1E; /* Deep Slate/Iron Stone */
+  --color-surface: #24272B; /* Polished Concrete/Basalt */
+  --color-wood: #E5C39E; /* Natural Birchwood */
+  --color-frost: #E0E4E8; /* Northern Frost/Aalto White */
+
+  --font-wacky: "Inter", system-ui;
+  --font-mono: "Fira Code", monospace;
+}
+
+@layer base {
+  body {
+    @apply bg-bg text-frost font-sans overflow-x-hidden antialiased;
+    /* Subtle geometric texture inspired by Finnish textiles (Marimekko) */
+    background-image: 
+      radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(94, 125, 126, 0.03) 0%, transparent 40%);
+  }
+
+  /* Sophisticated scrollbar inspired by metal finishes */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-bg;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-surface hover:bg-primary/50 transition-colors rounded-full;
+  }
+}
+
+@layer components {
+  /* Clean, functionalist card design */
+  .architectural-card {
+    @apply bg-surface border border-white/5 p-6 transition-all duration-500 relative overflow-hidden;
+    box-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.5);
+  }
+
+  .architectural-card:hover {
+    @apply border-primary/20 -translate-y-1;
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.7);
+  }
+
+  /* Elegant, understated buttons */
+  .nordic-button {
+    @apply px-6 py-2 bg-white/5 border border-white/10 text-frost text-sm font-semibold tracking-wide transition-all duration-300 hover:bg-white/10 hover:border-primary/40 active:scale-95 flex items-center gap-2;
+  }
+
+  .nordic-button-active {
+    @apply px-6 py-2 bg-primary/20 border border-primary text-primary text-sm font-semibold tracking-wide shadow-lg shadow-primary/5 flex items-center gap-2;
+  }
+
+  /* Sophisticated typography headers */
+  .nordic-header {
+    @apply text-frost font-black tracking-tight mb-2;
+    letter-spacing: -0.05em;
+  }
+}
+
+@keyframes slow-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-nordic-float {
+  animation: slow-float 8s ease-in-out infinite;
+}
