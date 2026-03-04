@@ -16,13 +16,19 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
-    /* Linting */
+    /* Best Practices & Strictness */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
+    "noImplicitReturns": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+    "erasableSyntaxOnly": true
   },
   "include": ["src"]
 }

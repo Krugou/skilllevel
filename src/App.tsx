@@ -36,6 +36,23 @@ ChartJS.register(
   Legend
 );
 
+interface SkillCategory {
+  name: string;
+  count: number;
+}
+
+interface SkillData {
+  stats: {
+    total_packages: number;
+    top_package: string;
+    timestamp: string;
+  };
+  packages: Record<string, number>;
+  categories: Record<string, SkillCategory[]>;
+}
+
+const typedSkillData = skillData as SkillData;
+
 type SectionId = 'about' | 'chart' | 'stats' | 'categories' | 'grid';
 type DataSort = 'desc' | 'asc' | 'random';
 
@@ -44,20 +61,20 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [filterMode, setFilterMode] = useState<number | 'all'>('all');
   const [dataSort, setDataSort] = useState<DataSort>('desc');
-  const [shuffleKey, setShuffleKey] = useState(0);
+  const [randomizedEntries, setRandomizedEntries] = useState<[string, number][]>([]);
   const [sectionOrder, setSectionOrder] = useState<SectionId[]>(['about', 'stats', 'chart', 'categories', 'grid']);
   
   const containerRef = useRef<HTMLDivElement>(null);
 
   const allEntries = useMemo(() => {
-    let entries = Object.entries(skillData.packages);
+    const entries = Object.entries(typedSkillData.packages);
     if (dataSort === 'asc') {
-      return [...entries].sort((a, b) => (a[1] as number) - (b[1] as number));
+      return [...entries].sort((a, b) => a[1] - b[1]);
     } else if (dataSort === 'random') {
-      return [...entries].sort(() => Math.random() - 0.5);
+      return randomizedEntries;
     }
-    return [...entries].sort((a, b) => (b[1] as number) - (a[1] as number));
-  }, [dataSort, shuffleKey]);
+    return [...entries].sort((a, b) => b[1] - a[1]);
+  }, [dataSort, randomizedEntries]);
 
   const filteredEntries = useMemo(() => {
     let result = allEntries.filter(([name]) => 
@@ -65,7 +82,7 @@ function App() {
     );
 
     if (selectedCategory) {
-      const categoryPackages = (skillData.categories as any)[selectedCategory].map((p: any) => p.name);
+      const categoryPackages = typedSkillData.categories[selectedCategory].map((p) => p.name);
       result = result.filter(([name]) => categoryPackages.includes(name));
     }
 
@@ -83,11 +100,13 @@ function App() {
   }, [filteredEntries]);
 
   const labels = chartPackages.map(([name]) => name);
-  const counts = chartPackages.map(([, count]) => count as number);
+  const counts = chartPackages.map(([, count]) => count);
 
   const handleRandomize = () => {
+    const entries = Object.entries(typedSkillData.packages);
+    const shuffled = [...entries].sort(() => Math.random() - 0.5);
+    setRandomizedEntries(shuffled);
     setDataSort('random');
-    setShuffleKey(prev => prev + 1);
   };
 
   const moveSection = (id: SectionId, direction: 'up' | 'down') => {
@@ -161,7 +180,7 @@ function App() {
   };
 
   const renderSection = (id: SectionId) => {
-    const commonHeader = (title: string, sectionId: SectionId, icon: any) => (
+    const commonHeader = (title: string, sectionId: SectionId, icon: React.ReactNode) => (
       <div className="flex items-center justify-between mb-8 border-b border-white/5 pb-4">
         <h2 className="text-2xl font-black text-frost flex items-center gap-3 uppercase tracking-widest">
           {icon}
@@ -210,7 +229,7 @@ function App() {
                 <BarChart3 className="text-primary w-8 h-8 opacity-40" />
                 <h3 className="text-lg font-bold border-l-2 border-primary pl-3">Visualization</h3>
                 <p className="text-tertiary text-sm leading-relaxed font-light">
-                  Built with React and Chart.js, the dashboard provides a high-level view of your "Engineering DNA" using GSAP for smooth layout transitions.
+                  Built with React and Chart.js, the dashboard provides a high-level view of your &quot;Engineering DNA&quot; using GSAP for smooth layout transitions.
                 </p>
               </div>
               <div className="space-y-4">
@@ -238,19 +257,19 @@ function App() {
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="bg-surface p-8 border-l-4 border-primary shadow-sm hover:translate-x-1 transition-transform">
                 <h3 className="text-xs font-bold text-tertiary uppercase tracking-widest mb-2">Unique Packages</h3>
-                <p className="text-5xl font-black text-frost tracking-tighter">{skillData.stats.total_packages}</p>
+                <p className="text-5xl font-black text-frost tracking-tighter">{typedSkillData.stats.total_packages}</p>
               </div>
               <div className="bg-surface p-8 border-l-4 border-secondary shadow-sm hover:translate-x-1 transition-transform">
                 <h3 className="text-xs font-bold text-tertiary uppercase tracking-widest mb-2">Primary Tool</h3>
-                <p className="text-2xl font-black text-frost truncate mt-2">{skillData.stats.top_package}</p>
+                <p className="text-2xl font-black text-frost truncate mt-2">{typedSkillData.stats.top_package}</p>
               </div>
               <div className="bg-surface p-8 border-l-4 border-tertiary shadow-sm hover:translate-x-1 transition-transform">
                 <h3 className="text-xs font-bold text-tertiary uppercase tracking-widest mb-2">Categories</h3>
-                <p className="text-5xl font-black text-frost tracking-tighter">{Object.keys(skillData.categories).length}</p>
+                <p className="text-5xl font-black text-frost tracking-tighter">{Object.keys(typedSkillData.categories).length}</p>
               </div>
               <div className="bg-surface p-8 border-l-4 border-wood shadow-sm hover:translate-x-1 transition-transform">
                 <h3 className="text-xs font-bold text-tertiary uppercase tracking-widest mb-2">Last Scraped</h3>
-                <p className="text-lg font-black text-frost mt-3 opacity-60 font-mono">{skillData.stats.timestamp.split(' ')[0]}</p>
+                <p className="text-lg font-black text-frost mt-3 opacity-60 font-mono">{typedSkillData.stats.timestamp.split(' ')[0]}</p>
               </div>
             </div>
           </section>
@@ -266,7 +285,7 @@ function App() {
               >
                 All Packages
               </button>
-              {Object.keys(skillData.categories).sort().map(cat => (
+              {Object.keys(typedSkillData.categories).sort().map(cat => (
                 <button
                   key={cat}
                   onClick={() => setSelectedCategory(cat)}
@@ -284,7 +303,7 @@ function App() {
             <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 border-b border-white/5 pb-4">
               <h2 className="text-2xl font-black text-frost flex items-center gap-3 uppercase tracking-widest">
                 <Filter className="w-5 h-5 text-primary" />
-                {searchTerm ? 'Search' : selectedCategory ? selectedCategory : 'Ecosystem'}
+                {searchTerm ? 'Search' : (selectedCategory ?? 'Ecosystem')}
               </h2>
               <div className="flex items-center gap-4">
                 <span className="text-xs font-mono text-tertiary tracking-tighter">TOTAL_ENTRIES: {filteredEntries.length}</span>
@@ -298,7 +317,7 @@ function App() {
               {filteredEntries.map(([name, count]) => (
                 <div key={name} className="bg-surface p-4 hover:bg-white/5 transition-colors group relative cursor-default">
                   <div className="text-[10px] font-mono text-tertiary mb-1 truncate uppercase tracking-tighter" title={name}>{name}</div>
-                  <div className="text-xl font-black text-primary group-hover:text-frost transition-colors">{count as number}</div>
+                  <div className="text-xl font-black text-primary group-hover:text-frost transition-colors">{count}</div>
                 </div>
               ))}
               {filteredEntries.length === 0 && (
@@ -375,7 +394,7 @@ function App() {
 
         <footer className="mt-24 text-center border-t border-white/5 pt-12 pb-24">
           <p className="font-mono text-[10px] text-tertiary uppercase tracking-[0.5em] opacity-50">
-            Automated Analysis System • Helsinki Functionalism Theme • {skillData.stats.timestamp}
+            Automated Analysis System • Helsinki Functionalism Theme • {typedSkillData.stats.timestamp}
           </p>
         </footer>
       </div>
