@@ -119,16 +119,7 @@ function App() {
   };
 
   useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.dashboard-section', {
-        y: 20,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.15,
-        ease: 'power3.out'
-      });
-    }, containerRef);
-    return () => ctx.revert();
+    // Animation removed to ensure visibility
   }, [sectionOrder]);
 
   const data = {
@@ -212,28 +203,28 @@ function App() {
             {commonHeader('Information Hub', 'about', <Compass className="w-5 h-5 text-primary" />)}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
               <div className="space-y-4">
-                <Database className="text-primary w-8 h-8 opacity-40" />
+                <Database className="text-primary w-8 h-8" />
                 <h3 className="text-lg font-bold border-l-2 border-primary pl-3">Data Aggregator</h3>
                 <p className="text-tertiary text-sm leading-relaxed font-light">
                   SkillLevel uses a custom Python-based scraper to traverse your local projects and query the GitHub API. It parses <code>package.json</code> files to identify every tool you use.
                 </p>
               </div>
               <div className="space-y-4">
-                <Layers className="text-primary w-8 h-8 opacity-40" />
+                <Layers className="text-primary w-8 h-8" />
                 <h3 className="text-lg font-bold border-l-2 border-primary pl-3">Categorization</h3>
                 <p className="text-tertiary text-sm leading-relaxed font-light">
                   Advanced pattern matching automatically classifies your stack into domains like Frontend, Backend, and Visualization, helping you visualize your specialization.
                 </p>
               </div>
               <div className="space-y-4">
-                <BarChart3 className="text-primary w-8 h-8 opacity-40" />
+                <BarChart3 className="text-primary w-8 h-8" />
                 <h3 className="text-lg font-bold border-l-2 border-primary pl-3">Visualization</h3>
                 <p className="text-tertiary text-sm leading-relaxed font-light">
                   Built with React and Chart.js, the dashboard provides a high-level view of your &quot;Engineering DNA&quot; using GSAP for smooth layout transitions.
                 </p>
               </div>
               <div className="space-y-4">
-                <Code2 className="text-primary w-8 h-8 opacity-40" />
+                <Code2 className="text-primary w-8 h-8" />
                 <h3 className="text-lg font-bold border-l-2 border-primary pl-3">Developer Focus</h3>
                 <p className="text-tertiary text-sm leading-relaxed font-light">
                   This tool is designed for software engineers who want to track their technical journey, discover trends in their coding habits, and keep their tech stack fresh.
@@ -269,7 +260,7 @@ function App() {
               </div>
               <div className="bg-surface p-8 border-l-4 border-wood shadow-sm hover:translate-x-1 transition-transform">
                 <h3 className="text-xs font-bold text-tertiary uppercase tracking-widest mb-2">Last Scraped</h3>
-                <p className="text-lg font-black text-frost mt-3 opacity-60 font-mono">{typedSkillData.stats.timestamp.split(' ')[0]}</p>
+                <p className="text-lg font-black text-frost mt-3 font-mono">{typedSkillData.stats.timestamp.split(' ')[0]}</p>
               </div>
             </div>
           </section>
@@ -393,7 +384,7 @@ function App() {
         </div>
 
         <footer className="mt-24 text-center border-t border-white/5 pt-12 pb-24">
-          <p className="font-mono text-[10px] text-tertiary uppercase tracking-[0.5em] opacity-50">
+          <p className="font-mono text-[10px] text-tertiary uppercase tracking-[0.5em]">
             Automated Analysis System • Helsinki Functionalism Theme • {typedSkillData.stats.timestamp}
           </p>
         </footer>
