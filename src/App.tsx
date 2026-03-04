@@ -118,11 +118,11 @@ function App() {
       {
         label: 'Package Frequency',
         data: counts,
-        backgroundColor: 'rgba(212, 175, 55, 0.85)',
+        backgroundColor: '#D4AF37',
         borderColor: '#D4AF37',
         borderWidth: 2,
         borderRadius: 4,
-        hoverBackgroundColor: '#D4AF37',
+        hoverBackgroundColor: '#E5C39E',
       },
     ],
   };
